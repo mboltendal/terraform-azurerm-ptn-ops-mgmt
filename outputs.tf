@@ -34,10 +34,10 @@ output "network" {
         name           = module.network.subnets["management"].name
         address_prefix = module.network.subnets["management"].address_prefixes[0]
       }
-      runners = {
-        id             = module.network.subnets["runners"].resource_id
-        name           = module.network.subnets["runners"].name
-        address_prefix = module.network.subnets["runners"].address_prefixes[0]
+      agents = {
+        id             = module.network.subnets["agents"].resource_id
+        name           = module.network.subnets["agents"].name
+        address_prefix = module.network.subnets["agents"].address_prefixes[0]
       }
       private_link = {
         id             = module.network.subnets["private_link"].resource_id
@@ -55,13 +55,23 @@ output "network_security_groups" {
       id   = azurerm_network_security_group.management.id
       name = azurerm_network_security_group.management.name
     }
-    runners = {
-      id   = azurerm_network_security_group.runners.id
-      name = azurerm_network_security_group.runners.name
+    agents = {
+      id   = azurerm_network_security_group.agents.id
+      name = azurerm_network_security_group.agents.name
     }
     private_link = {
       id   = azurerm_network_security_group.private_link.id
       name = azurerm_network_security_group.private_link.name
     }
   }
+}
+
+output "devops_agents" {
+  description = "DevOps agents VMSS information"
+  value = var.enable_devops_agents ? {
+    vmss_id        = module.devops_agents[0].vmss_id
+    vmss_name      = module.devops_agents[0].vmss_name
+    resource_group = azurerm_resource_group.agents.name
+    identity_id    = azurerm_user_assigned_identity.owner.id
+  } : null
 }

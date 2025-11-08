@@ -47,13 +47,23 @@ module "ops_management" {
     "owner" = "Cloud Platform Team"
   }
 
-  network_address_space = ["10.100.0.0/23"]
-  network_subnet_management_address_prefix = "10.100.0.0/26"
-  network_subnet_runners_address_prefix     = "10.100.0.64/26"
+  # Configure networking
+  network_address_space                      = ["10.100.0.0/23"]
+  network_subnet_management_address_prefix   = "10.100.0.0/26"
+  network_subnet_agents_address_prefix       = "10.100.0.64/26"
   network_subnet_private_link_address_prefix = "10.100.0.128/26"
 
   # Allow all sources for management access (dev environment)
   network_management_allowed_source_addresses = ["*"]
   # For production, use specific IP ranges instead:
   # network_management_allowed_source_addresses = ["203.0.113.0/24", "198.51.100.50/32"]
+
+  # Configure DevOps agents VMSS
+  enable_devops_agents                = true
+  devops_agents_sku                   = "Standard_DS2_v2"
+  devops_agents_instances             = 1
+  devops_agents_enable_spot_instances = true
+  devops_agents_spot_max_price        = -1 # Pay up to on-demand price
+  devops_agents_use_ephemeral_os_disk = true
+
 }

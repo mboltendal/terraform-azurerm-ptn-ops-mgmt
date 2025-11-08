@@ -6,7 +6,7 @@ A Terraform module for deploying a secure, self-contained operational workload i
 
 ## Overview
 
-This module creates a complete operational environment including compute resources (VMSS runners and jumphost), networking, storage for Terraform state, monitoring, and automation capabilities - all designed to manage Azure infrastructure securely from inside Azure.
+This module creates a complete operational environment including compute resources (VMSS devops agents and jumphost), networking, storage for Terraform state, monitoring, and automation capabilities - all designed to manage Azure infrastructure securely from inside Azure.
 
 ## Features
 
@@ -17,8 +17,8 @@ This module creates a complete operational environment including compute resourc
 - No stored credentials - all authentication via managed identities
 
 ### 💻 Compute
-- **Linux VMSS** - DevOps pipeline runners
-  - Custom pipeline runner image
+- **Linux VMSS** - DevOps pipeline agents
+  - Custom pipeline agent image
   - Autoscaling based on demand
   - Ephemeral OS disks for performance and cost savings
   - Spot instance support for cost optimization
@@ -29,7 +29,7 @@ This module creates a complete operational environment including compute resourc
 ### 🌐 Networking
 - Virtual Network with dedicated subnets
   - Management subnet (jumphost)
-  - Runner subnet (VMSS)
+  - Agents subnet (VMSS)
   - Private Link subnet (for private endpoints)
 - Network Security Groups for traffic control
   - Configurable source IP restrictions for management access
@@ -78,10 +78,10 @@ module "ops_management" {
   location    = "westeurope"
 
   # Network configuration
-  network_address_space                       = ["10.100.0.0/23"]
-  network_subnet_management_address_prefix    = "10.100.0.0/26"
-  network_subnet_runners_address_prefix       = "10.100.0.64/26"
-  network_subnet_private_link_address_prefix  = "10.100.0.128/26"
+  network_address_space                      = ["10.100.0.0/23"]
+  network_subnet_management_address_prefix   = "10.100.0.0/26"
+  network_subnet_agents_address_prefix       = "10.100.0.64/26"
+  network_subnet_private_link_address_prefix = "10.100.0.128/26"
 
   # Management access - restrict to your IP for production
   network_management_allowed_source_addresses = ["203.0.113.0/24"]
@@ -154,7 +154,7 @@ module "ops_management" {
 | tags | Tags to apply to all resources | `map(string)` | `{}` | no |
 | network_address_space | The address space for the virtual network | `list(string)` | `["10.100.0.0/23"]` | no |
 | network_subnet_management_address_prefix | The address prefix for the management subnet | `string` | `"10.100.0.0/26"` | no |
-| network_subnet_runners_address_prefix | The address prefix for the runners subnet | `string` | `"10.100.0.64/26"` | no |
+| network_subnet_agents_address_prefix | The address prefix for the agents subnet | `string` | `"10.100.0.64/26"` | no |
 | network_subnet_private_link_address_prefix | The address prefix for the private link subnet | `string` | `"10.100.0.128/26"` | no |
 | network_management_allowed_source_addresses | List of source IP addresses or CIDR ranges allowed to access the management subnet. Use `["*"]` to allow all, or specify specific IPs/ranges | `list(string)` | `[]` | yes |
 | network_peerings | A map of virtual network peerings (see AVM module documentation) | `map(object)` | `{}` | no |
@@ -215,7 +215,7 @@ See the `examples/` directory for usage examples:
 - **Management Access**: By default, you must explicitly configure allowed source IP addresses for management subnet access. Use `["*"]` only in development environments.
 - **Private Endpoints**: All PaaS services use private endpoints with no public access.
 - **Managed Identities**: No credentials are stored; all authentication uses Azure Managed Identities.
-- **Network Isolation**: Separate subnets for management, runners, and private endpoints.
+- **Network Isolation**: Separate subnets for management, agents, and private endpoints.
 
 ## Contributing
 

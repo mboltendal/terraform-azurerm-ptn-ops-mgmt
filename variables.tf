@@ -28,8 +28,8 @@ variable "network_subnet_management_address_prefix" {
   default     = "10.100.0.0/26"
 }
 
-variable "network_subnet_runners_address_prefix" {
-  description = "The address prefixes for the runners subnet."
+variable "network_subnet_agents_address_prefix" {
+  description = "The address prefixes for the agents subnet."
   type        = string
   default     = "10.100.0.64/26"
 }
@@ -52,7 +52,7 @@ variable "network_management_allowed_source_addresses" {
   default     = []
 
   validation {
-    condition = length(var.network_management_allowed_source_addresses) > 0
+    condition     = length(var.network_management_allowed_source_addresses) > 0
     error_message = "network_management_allowed_source_addresses must contain at least one entry. Use ['*'] to allow all sources or specify specific IP addresses/CIDR ranges."
   }
 
@@ -65,7 +65,7 @@ variable "network_management_allowed_source_addresses" {
   }
 
   validation {
-    condition = !(contains(var.network_management_allowed_source_addresses, "*") && length(var.network_management_allowed_source_addresses) > 1)
+    condition     = !(contains(var.network_management_allowed_source_addresses, "*") && length(var.network_management_allowed_source_addresses) > 1)
     error_message = "When using '*' to allow all sources, it must be the only entry in the list."
   }
 }
@@ -131,4 +131,40 @@ variable "network_peerings" {
     }), {})
   }))
   default = {}
+}
+
+variable "enable_devops_agents" {
+  description = "Whether to enable the DevOps agents VMSS."
+  type        = bool
+  default     = true
+}
+
+variable "devops_agents_sku" {
+  description = "The VM size for the DevOps agents."
+  type        = string
+  default     = "Standard_D2s_v3"
+}
+
+variable "devops_agents_instances" {
+  description = "The number of instances for the DevOps agents VMSS."
+  type        = number
+  default     = 2
+}
+
+variable "devops_agents_enable_spot_instances" {
+  description = "Whether to enable spot instances for the DevOps agents VMSS."
+  type        = bool
+  default     = true
+}
+
+variable "devops_agents_spot_max_price" {
+  description = "The maximum price for spot instances for the DevOps agents VMSS. Use -1 for on-demand price."
+  type        = number
+  default     = -1
+}
+
+variable "devops_agents_use_ephemeral_os_disk" {
+  description = "Whether to use ephemeral OS disks for the DevOps agents VMSS."
+  type        = bool
+  default     = true
 }
