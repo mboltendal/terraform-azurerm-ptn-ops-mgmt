@@ -3,8 +3,8 @@ module "devops_agents" {
   count  = var.enable_devops_agents ? 1 : 0
 
   name                = "vmss-${local.name_prefix}-agents"
-  resource_group_name = azurerm_resource_group.agents.name
-  location            = azurerm_resource_group.agents.location
+  resource_group_name = azurerm_resource_group.vms.name
+  location            = azurerm_resource_group.vms.location
   subnet_id           = module.network.subnets["agents"].resource_id
 
   # VM Configuration
