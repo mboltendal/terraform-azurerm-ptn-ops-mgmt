@@ -3,6 +3,7 @@ output "resource_group_ids" {
   value = {
     network  = azurerm_resource_group.network.id
     security = azurerm_resource_group.security.id
+    vms      = azurerm_resource_group.vms.id
   }
 }
 
@@ -71,7 +72,29 @@ output "devops_agents" {
   value = var.enable_devops_agents ? {
     vmss_id        = module.devops_agents[0].vmss_id
     vmss_name      = module.devops_agents[0].vmss_name
-    resource_group = azurerm_resource_group.agents.name
+    resource_group = azurerm_resource_group.vms.name
     identity_id    = azurerm_user_assigned_identity.owner.id
+  } : null
+}
+
+output "management_vm" {
+  description = "Management VM information"
+  value = var.enable_management_vm ? {
+    vm_id                   = module.management_vm[0].vm_id
+    vm_name                 = module.management_vm[0].vm_name
+    vm_private_ip_address   = module.management_vm[0].vm_private_ip_address
+    vm_network_interface_id = module.management_vm[0].vm_network_interface_id
+    resource_group          = azurerm_resource_group.vms.name
+    public_ip_id            = module.management_vm[0].vm_public_ip_id
+    public_ip_address       = module.management_vm[0].vm_public_ip_address
+  } : null
+}
+
+output "management_vm_account" {
+  description = "Management VM local administrator account"
+  sensitive   = true
+  value = var.enable_management_vm ? {
+    username = module.management_vm[0].admin_username
+    password = module.management_vm[0].admin_password
   } : null
 }

@@ -168,3 +168,21 @@ variable "devops_agents_use_ephemeral_os_disk" {
   type        = bool
   default     = true
 }
+
+variable "enable_management_vm" {
+  description = "Enable the management virtual machine"
+  type        = bool
+  default     = true
+}
+
+variable "management_vm_size" {
+  description = "The size of the management virtual machine"
+  type        = string
+  default     = "Standard_D2s_v5"
+}
+
+variable "management_vm_enable_public_ip" {
+  description = "Enable public IP address for the management virtual machine"
+  type        = bool
+  default     = false
+}

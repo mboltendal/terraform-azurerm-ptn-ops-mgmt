@@ -1,4 +1,3 @@
-
 resource "azurerm_network_security_group" "management" {
   name                = "nsg-${local.name_prefix}-snet-management"
   location            = azurerm_resource_group.network.location
@@ -24,6 +23,18 @@ resource "azurerm_network_security_group" "agents" {
   location            = azurerm_resource_group.network.location
   resource_group_name = azurerm_resource_group.network.name
   tags                = local.common_tags
+
+  security_rule {
+    name                       = "AllowSSHFromManagement"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = var.network_subnet_management_address_prefix
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_security_group" "private_link" {

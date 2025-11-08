@@ -59,13 +59,12 @@ module "ops_management" {
   # network_management_allowed_source_addresses = ["203.0.113.0/24", "198.51.100.50/32"]
 
   # Configure DevOps agents VMSS
-  enable_devops_agents                = true
-  devops_agents_sku                   = "Standard_DS2_v2"
-  devops_agents_instances             = 1
-  devops_agents_enable_spot_instances = true
-  devops_agents_spot_max_price        = -1 # Pay up to on-demand price
-  devops_agents_use_ephemeral_os_disk = true
-
+  enable_devops_agents = false
+  # devops_agents_sku                   = "Standard_DS2_v2"
+  # devops_agents_instances             = 1
+  # devops_agents_enable_spot_instances = true
+  # devops_agents_spot_max_price        = -1 # Pay up to on-demand price
+  # devops_agents_use_ephemeral_os_disk = true
 
   # Configure management VM
   enable_management_vm           = true
