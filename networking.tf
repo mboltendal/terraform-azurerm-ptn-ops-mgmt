@@ -19,8 +19,8 @@ resource "azurerm_network_security_group" "management" {
   }
 }
 
-resource "azurerm_network_security_group" "runners" {
-  name                = "nsg-${local.name_prefix}-snet-runners"
+resource "azurerm_network_security_group" "agents" {
+  name                = "nsg-${local.name_prefix}-snet-agents"
   location            = azurerm_resource_group.network.location
   resource_group_name = azurerm_resource_group.network.name
   tags                = local.common_tags
@@ -54,14 +54,14 @@ module "network" {
       default_outbound_access_enabled   = true # TODO: make variable?
       network_security_group            = { id = azurerm_network_security_group.management.id }
     },
-    runners = {
-      name                              = "snet-runners"
-      address_prefix                    = var.network_subnet_runners_address_prefix
+    agents = {
+      name                              = "snet-agents"
+      address_prefix                    = var.network_subnet_agents_address_prefix
       delegation                        = null
       service_endpoints                 = ["Microsoft.Storage", "Microsoft.KeyVault"]
       private_endpoint_network_policies = "Disabled"
       default_outbound_access_enabled   = true # TODO: make variable?
-      network_security_group            = { id = azurerm_network_security_group.runners.id }
+      network_security_group            = { id = azurerm_network_security_group.agents.id }
     },
     private_link = {
       name                              = "snet-private-links"
